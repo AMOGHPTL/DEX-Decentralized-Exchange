@@ -26,6 +26,7 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
     uint256 private sReserve0; //reserve is the amount of token that is available in the pool for the respective token
     uint256 private sReserve1;
     mapping(address token => uint256 reserve) sTokenToReserve;
+    address[] public sTokens;
 
     ///////////////////////////////////////
     ///////////// functions ///////////////
@@ -34,6 +35,8 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
         I_TOKEN0 = IERC20(token0);
         I_TOKEN1 = IERC20(token1);
         I_FEE = fee;
+        sTokens.push(token0);
+        sTokens.push(token1);
     }
 
     ///////////////////////////////////////
@@ -71,7 +74,7 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
     }
 
     function addLiquidity(uint256 amount0, uint256 amount1) public nonReentrant {
-        if (sTokenToReserve[address(I_TOKEN0)] > 0 && sTokenToReserve[address(I_TOKEN1)] > 0) {
+        if (sTokenToReserve[address(I_TOKEN0)] > 0 || sTokenToReserve[address(I_TOKEN1)] > 0) {
             if (sTokenToReserve[address(I_TOKEN0)] / sTokenToReserve[address(I_TOKEN1)] != amount0 / amount1) {
                 revert LiquidityPool__InvalidTokenRatio();
             }
@@ -124,10 +127,20 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
     ///////////////////////////////////////
     ////////// external view //////////////
     ///////////////////////////////////////
-    function getTokens() public view {}
+    function getTokens() public view returns (address, address) {
+        return (sTokens[0], sTokens[1]);
+    }
 
     function getFee() public view returns (uint256) {
         return I_FEE;
+    }
+
+    function getPoolLiquidity() public view returns (uint256) {
+        return (sTokenToReserve[address(I_TOKEN0)] + sTokenToReserve[address(I_TOKEN1)]);
+    }
+
+    function getReserveOfToken(address token) public view returns (uint256) {
+        return sTokenToReserve[token];
     }
 
     ///////////////////////////////////////
