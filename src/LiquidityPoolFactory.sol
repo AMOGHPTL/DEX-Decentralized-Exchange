@@ -47,6 +47,7 @@ contract LiquidityPoolFactory {
         address poolAddress = address(liquidityPool);
         sPoolsList.push(poolAddress);
         sPoolToPoolInfo[poolAddress] = PoolStruct(poolAddress, token0, token1, fee);
+        sGetPool[token0][token1] = PoolStruct(poolAddress, token0, token1, fee);
     }
 
     ///////////////External view/////////////////////////////////
@@ -63,5 +64,13 @@ contract LiquidityPoolFactory {
 
     function getAllPools() public view returns (address[] memory) {
         return sPoolsList;
+    }
+
+    function getPoolWithAddress(address poolAddress) public view returns (PoolStruct memory) {
+        return sPoolToPoolInfo[poolAddress];
+    }
+
+    function getPoolInfo(address token0, address token1) public view returns (PoolStruct memory) {
+        return sGetPool[token0][token1];
     }
 }

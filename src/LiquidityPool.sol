@@ -14,6 +14,7 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
     error LiquidityPool__SwapTransferFailed();
     error LiquidityPool__InvalidTokenRatio();
     error LiquidityPool__ZeroLiquidityTokens();
+    error LiquidityPool__NotEnoughReserve();
 
     IERC20 private immutable I_TOKEN0; //Both of the tokens represented here are erc20 tokens
     IERC20 private immutable I_TOKEN1;
@@ -115,7 +116,7 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
         // amount you get = share * totalLiquidity
 
         uint256 yourOwnedShare = liquidityTokens / totalSupply();
-       
+
         _burn(msg.sender, liquidityTokens);
         updateLiquidity(
             (sTokenToReserve[address(I_TOKEN0)] - yourOwnedShare * (sTokenToReserve[address(I_TOKEN0)])),
@@ -178,6 +179,10 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
 
         uint256 amountOut = (reserveOut * amountInAfterFee) / (reserveIn + amountInAfterFee);
 
+        if (amountOut > sTokenToReserve[tokenOut]) {
+            revert LiquidityPool__NotEnoughReserve();
+        }
+
         return amountOut;
     }
 
@@ -187,7 +192,7 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
     }
 
     function _invalidToken(address tokenIn) internal view {
-        if (tokenIn != address(I_TOKEN0) || tokenIn != address(I_TOKEN1)) {
+        if (tokenIn != address(I_TOKEN0) && tokenIn != address(I_TOKEN1)) {
             revert LiquidityPool__InvalidToken();
         }
     }
