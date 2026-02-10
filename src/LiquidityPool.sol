@@ -115,9 +115,11 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
         // amount you get = share * totalLiquidity
 
         uint256 yourOwnedShare = liquidityTokens / totalSupply();
-
+       
+        _burn(msg.sender, liquidityTokens);
         updateLiquidity(
-            yourOwnedShare * (sTokenToReserve[address(I_TOKEN0)]), yourOwnedShare * (sTokenToReserve[address(I_TOKEN0)])
+            (sTokenToReserve[address(I_TOKEN0)] - yourOwnedShare * (sTokenToReserve[address(I_TOKEN0)])),
+            (sTokenToReserve[address(I_TOKEN1)] - yourOwnedShare * (sTokenToReserve[address(I_TOKEN0)]))
         );
 
         I_TOKEN0.transfer(msg.sender, yourOwnedShare * (sTokenToReserve[address(I_TOKEN0)]));
