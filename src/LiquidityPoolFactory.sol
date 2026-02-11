@@ -66,8 +66,9 @@ contract LiquidityPoolFactory {
         return sPoolsList;
     }
 
-    function getPoolWithAddress(address poolAddress) public view returns (PoolStruct memory) {
-        return sPoolToPoolInfo[poolAddress];
+    function getPoolWithAddress(address poolAddress) public view returns (address, address, address, uint256) {
+        PoolStruct memory pool = sPoolToPoolInfo[poolAddress];
+        return (pool.poolAddress, pool.token0, pool.token1, pool.fee);
     }
 
     function getPoolInfo(address token0, address token1) public view returns (PoolStruct memory) {
