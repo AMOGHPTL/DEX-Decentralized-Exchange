@@ -8,18 +8,20 @@ import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http } from "viem";
 import { darkTheme } from "@rainbow-me/rainbowkit";
+import { BrowserRouter } from "react-router-dom";
 
-const anvilChain = {  // ⭐ Removed type annotation
+const anvilChain = {
+  // ⭐ Removed type annotation
   id: 31337,
-  name: 'Localhost',
+  name: "Localhost",
   nativeCurrency: {
     decimals: 18,
-    name: 'Ether',
-    symbol: 'ETH',
+    name: "Ether",
+    symbol: "ETH",
   },
   rpcUrls: {
-    default: { http: ['http://127.0.0.1:8545'] },
-    public: { http: ['http://127.0.0.1:8545'] },
+    default: { http: ["http://127.0.0.1:8545"] },
+    public: { http: ["http://127.0.0.1:8545"] },
   },
 };
 
@@ -51,7 +53,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           fontStack: "system",
         })}
       >
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </RainbowKitProvider>
     </QueryClientProvider>
   </WagmiProvider>,

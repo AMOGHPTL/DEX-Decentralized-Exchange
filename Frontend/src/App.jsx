@@ -5,6 +5,8 @@ import CreatePool from "./components/CreatePool";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import LandingPage from "./pages/LandingPage";
+import CreatePoolPage from "./pages/CreatePoolPage";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -13,10 +15,10 @@ function App() {
     <div className="min">
       <Navbar />
       <main>
-        {/* <Header heading="Decentralized Exchanges made Simple" subheading="create pools, add liquidity and swap tokens all at one place"/>
-        <CreatePool />
-        <PoolList /> */}
-        <LandingPage />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/CreatePool" element={<CreatePoolPage />} />
+        </Routes>
       </main>
     </div>
   );

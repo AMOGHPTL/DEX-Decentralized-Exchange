@@ -6,7 +6,6 @@ const Navbar = () => {
     <div className="flex text-gray-400 justify-between py-[12px] px-[30px] ">
       <div className="flex items-center gap-[20px]">
         <img src={logo} alt="" className="w-[60px] " />
-        <p className="text-[30px] font-semibold">Flex-DEX</p>
       </div>
       <div className="flex gap-[40px] items-center">
         <p>Home</p>
