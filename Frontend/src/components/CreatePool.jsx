@@ -1,24 +1,56 @@
 import { useCreatePool } from "../hooks/poolFactory";
 import PoolFactoryAddress from "../abi/LiquidityPoolFactoryAddresses.json";
 import { useChainId } from "wagmi";
+import { useState } from "react";
+import Tokens from "../abi/tokenAddressToName.json";
 
 const CreatePool = () => {
-  const token0 = "0x2b961E3959b79326A8e7F64Ef0d2d825707669b5";
-  const token1 = "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82";
+  const cardano = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
+  const matic = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
+  // const solana;
+  // const usdc;
   const fee = 10000;
   const chainId = useChainId();
   const factoryAddress = PoolFactoryAddress[chainId];
 
   const { createPool } = useCreatePool(factoryAddress);
 
+  const [token0, setToken0] = useState("cardano");
+  const [token1, setToken1] = useState("matic");
+
   return (
     <div>
-      <button
+      {/* <button
         className="bg-white text-black cursor-pointer"
-        onClick={() => createPool(token0, token1, fee)}
+        onClick={() => createPool(cardano, matic, fee)}
       >
         Create Pool: cardano matic 1e15
-      </button>
+      </button> */}
+      <div>
+        <p>Create pool</p>
+      </div>
+      <div>
+        <p>Select Tokens</p>
+        <div>
+          <div>
+            <div>
+              <img
+                src={`../public/tokens/${token0}.svg`}
+                alt=""
+                className="w-[20px]"
+              />
+              <p>{token0}</p>
+            </div>
+            <div>
+              <img src={`../public/tokens/${token1}.svg`} alt="" className="w-[20px]"/>
+              <p>{token1}</p>
+            </div>
+          </div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
     </div>
   );
 };

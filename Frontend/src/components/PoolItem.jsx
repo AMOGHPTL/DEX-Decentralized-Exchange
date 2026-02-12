@@ -7,6 +7,10 @@ import TokenName from "../abi/tokenAddressToName.json";
 const PoolItem = ({ address }) => {
   const chainId = useChainId();
 
+  const Tokens = Object.fromEntries(
+    Object.entries(TokenName).map(([name, addr]) => [addr, name]),
+  );
+
   const factoryAddress = PoolFactoryAddresses[chainId];
 
   const enabled = Boolean(factoryAddress && address && isAddress(address));
@@ -25,13 +29,12 @@ const PoolItem = ({ address }) => {
     <div style={{ padding: "8px 0" }}>
       <strong>Pool address : {address}</strong>
       <ul>
-        <li>{TokenName[data.token0]}</li>
-        <li>{TokenName[data.token1]}</li>
+        <li>{Tokens[data.token0]}</li>
+        <li>{Tokens[data.token1]}</li>
         <li>fees : {data.fee}</li>
       </ul>
     </div>
   );
-  
 };
 
 export default PoolItem;

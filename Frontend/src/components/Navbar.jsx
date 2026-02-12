@@ -10,7 +10,7 @@ const Navbar = () => {
       </div>
       <div className="flex gap-[40px] items-center">
         <Link to="/">Home</Link>
-        <Link to="/">Swap</Link>
+        <Link to="/Swap">Swap</Link>
         <Link to="/ExplorePools">Explore Pools</Link>
         <Link to="/CreatePool">create pool</Link>
       </div>
