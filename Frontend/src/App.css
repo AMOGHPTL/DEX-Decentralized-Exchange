@@ -1,1 +1,12 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+body {
+  background-color:  #121212 ; /* softer dark */
+  color: white;
+  font-family: system-ui, sans-serif;
+}
+
+/* #1e2939 */
+
+/* rgb(105, 108, 160) */
+
