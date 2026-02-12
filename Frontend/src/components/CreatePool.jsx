@@ -13,7 +13,10 @@ const CreatePool = () => {
 
   return (
     <div>
-      <button onClick={() => createPool(token0, token1, fee)}>
+      <button
+        className="bg-white text-black cursor-pointer"
+        onClick={() => createPool(token0, token1, fee)}
+      >
         Create Pool: cardano matic 1e15
       </button>
     </div>

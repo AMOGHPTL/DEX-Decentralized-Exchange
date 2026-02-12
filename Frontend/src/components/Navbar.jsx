@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
@@ -8,10 +9,10 @@ const Navbar = () => {
         <img src={logo} alt="" className="w-[60px] " />
       </div>
       <div className="flex gap-[40px] items-center">
-        <p>Home</p>
-        <p>Swap</p>
-        <p>Explore Pools</p>
-        <p>create pool</p>
+        <Link to="/">Home</Link>
+        <Link to="/">Swap</Link>
+        <Link to="/ExplorePools">Explore Pools</Link>
+        <Link to="/CreatePool">create pool</Link>
       </div>
       <div className="h-[60px] w-fit flex items-center">
         <ConnectButton />
