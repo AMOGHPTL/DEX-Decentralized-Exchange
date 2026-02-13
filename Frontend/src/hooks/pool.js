@@ -1,24 +1,41 @@
 import LiquidityPool from "../abi/LiquidityPool.json";
-import {useReadContract} from "wagmi";
+import { useReadContract } from "wagmi";
 
-export function useGetPoolLiquidity(poolAddress, watch=true) {
+export function useGetPoolLiquidity(poolAddress, watch = true) {
+  const result = useReadContract({
+    address: poolAddress,
+    abi: LiquidityPool,
+    functionName: "getPoolLiquidity",
+    query: {
+      enabled: !!poolAddress,
+      refetchInterval: watch ? 3000 : false,
+    },
+  });
+
+  return {
+    liquidity: result.data ?? null,
+    isLoadingLiquidity: result.isLoading,
+    error: result.error,
+    refetch: result.refetch,
+  };
+}
+
+export function useGetTokenReserve(poolAddress, tokenAddress, watch = true) {
     const result = useReadContract({
         address: poolAddress,
         abi: LiquidityPool,
-        functionName: useGetPoolLiquidity,
-        args: [],
-        query: {
-          enabled: !!poolAddress,   // don't run if address missing
-          refetchInterval: watch ? 3000 : false, // auto refresh every 3s (optional)
-        },
-    }) 
-
-    const liquidity = result.data?result.data:null;
+        functionName: "getReserveOfToken",
+        args: [tokenAddress],
+           query: {
+      enabled: !!poolAddress,
+      refetchInterval: watch ? 3000 : false,
+    },
+    })
 
     return {
-        liquidity,
-        isLoading: result.isLoading,
-        error: result.error,
-        refetch: result.refetch
+            reserve: result.data ?? null,
+    isLoading: result.isLoading,
+    error: result.error,
+    refetch: result.refetch,
     }
 }

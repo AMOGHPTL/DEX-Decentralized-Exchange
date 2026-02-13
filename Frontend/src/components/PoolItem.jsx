@@ -3,13 +3,19 @@ import { useChainId } from "wagmi";
 import { useGetPoolInfoWithPoolAddress } from "../hooks/poolFactory";
 import PoolFactoryAddresses from "../abi/LiquidityPoolFactoryAddresses.json";
 import TokenName from "../abi/tokenAddressToName.json";
+import { useNavigate } from "react-router-dom";
+import { getReverseTokens } from "../utils/utils";
 
 const PoolItem = ({ address }) => {
   const chainId = useChainId();
 
-  const Tokens = Object.fromEntries(
-    Object.entries(TokenName).map(([name, addr]) => [addr, name]),
-  );
+  const navigate = useNavigate();
+
+  // const Tokens = Object.fromEntries(
+  //   Object.entries(TokenName).map(([name, addr]) => [addr, name]),
+  // );
+
+  const Tokens = getReverseTokens(TokenName);
 
   const factoryAddress = PoolFactoryAddresses[chainId];
 
@@ -26,7 +32,10 @@ const PoolItem = ({ address }) => {
   if (isError) return <div>Error loading {address}</div>;
 
   return (
-    <div style={{ padding: "8px 0" }}>
+    <div
+      onClick={() => navigate(`/Pool/${address}`)}
+      className="bg-gray-600 w-[600px] px-[20px] py-[10px] cursor-pointer rounded-[10px]"
+    >
       <strong>Pool address : {address}</strong>
       <ul>
         <li>{Tokens[data.token0]}</li>
