@@ -1,4 +1,4 @@
-import { isAddress } from "viem";
+import { formatEther, isAddress } from "viem";
 import { useChainId } from "wagmi";
 import { useParams } from "react-router-dom";
 import { getReverseTokens, shorten } from "../utils/utils";
@@ -30,7 +30,6 @@ const PoolPage = () => {
   );
 
   const reserveToken0 = useGetTokenReserve(address, data?.token0).reserve;
-
   const reserveToken1 = useGetTokenReserve(address, data?.token1).reserve;
 
   if (!enabled) return null;
@@ -72,15 +71,15 @@ const PoolPage = () => {
             <div className="flex flex-col gap-[3px]">
               <p className="text-xl">Balances</p>
               <p>
-                {Tokens[data.token0]} : {reserveToken0}
+                {Tokens[data.token0]} : {reserveToken0?formatEther(reserveToken0):null}
               </p>
               <p>
-                {Tokens[data.token1]} : {reserveToken1}
+                {Tokens[data.token1]} : {reserveToken1?formatEther(reserveToken1):null}
               </p>
             </div>
             <div className="flex flex-col gap-[3px]">
               <p className="text-xl">TVL</p>
-              <p>${liquidity.toString()}</p>
+              <p>${formatEther(liquidity?.toString())}</p>
             </div>
             <div className="flex flex-col gap-[3px]">
               <p className="text-xl">Fee</p>

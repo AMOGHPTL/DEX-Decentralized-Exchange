@@ -111,4 +111,51 @@ export function useAddLiquidity(
   };
 }
 
+export function useGetLiquidityTokenTotalSupply(poolAddress, watch=true){
+  const result = useReadContract({
+    address: poolAddress,
+    abi: LiquidityPool,
+    functionName: "totalSupply",
+    args: [],
+     query: {
+      enabled: !!poolAddress,
+      refetchInterval: watch ? 3000 : false,
+    },
+  })
+
+  return {
+    supply: result.data ?? null,
+    isLoadingSupply: result.isLoading,
+    error: result.error,
+    refetch: result.refetch,
+  };
+}
+
+import { isAddress } from "viem";
+
+export function useGetLiquidityTokenOfUser(poolAddress, userAddress) {
+  const enabled =
+    Boolean(poolAddress && userAddress) &&
+    isAddress(poolAddress) &&
+    isAddress(userAddress);
+
+  const result = useReadContract({
+    address: poolAddress,
+    abi: LiquidityPool,
+    functionName: "balanceOf",
+    args: [userAddress],
+    query: {
+      enabled,
+    },
+  });
+
+  return {
+    balance: result.data ?? null,
+    isLoadingBalance: result.isLoading,
+    error: result.error,
+    refetch: result.refetch,
+  };
+}
+
+
 

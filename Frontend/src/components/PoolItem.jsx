@@ -1,19 +1,19 @@
-import { isAddress } from "viem";
+import { formatEther, isAddress } from "viem";
 import { useChainId } from "wagmi";
 import { useGetPoolInfoWithPoolAddress } from "../hooks/poolFactory";
 import PoolFactoryAddresses from "../abi/LiquidityPoolFactoryAddresses.json";
 import TokenName from "../abi/tokenAddressToName.json";
 import { useNavigate } from "react-router-dom";
 import { getReverseTokens } from "../utils/utils";
+import { useGetPoolLiquidity } from "../hooks/pool";
 
 const PoolItem = ({ address }) => {
   const chainId = useChainId();
 
   const navigate = useNavigate();
 
-  // const Tokens = Object.fromEntries(
-  //   Object.entries(TokenName).map(([name, addr]) => [addr, name]),
-  // );
+  const { liquidity, isLoadingLiquidity, error, refetch } =
+    useGetPoolLiquidity(address);
 
   const Tokens = getReverseTokens(TokenName);
 
@@ -34,14 +34,29 @@ const PoolItem = ({ address }) => {
   return (
     <div
       onClick={() => navigate(`/Pool/${address}`)}
-      className="bg-gray-600 w-[600px] px-[20px] py-[10px] cursor-pointer rounded-[10px]"
+      className="grid grid-cols-[50%_25%_25%] items-center cursor-pointer bg-gray-900 px-[12px] py-[6px] rounded-xl"
     >
-      <strong>Pool address : {address}</strong>
-      <ul>
-        <li>{Tokens[data.token0]}</li>
-        <li>{Tokens[data.token1]}</li>
-        <li>fees : {data.fee}</li>
-      </ul>
+      <div className="flex items-center gap-[10px]">
+        <div className="flex items-center gap-[10px] text-[24px]">
+          <img
+            src={`../public/tokens/${Tokens[data.token0]}.svg`}
+            alt=""
+            className="w-[24px]"
+          />
+          <p>{Tokens[data.token0]}</p>
+        </div>
+        <p className="text-[24px]">/</p>
+        <div className="flex items-center gap-[10px] text-[24px]">
+          <img
+            src={`../public/tokens/${Tokens[data.token1]}.svg`}
+            alt=""
+            className="w-[24px]"
+          />
+          <p>{Tokens[data.token1]}</p>
+        </div>
+      </div>
+      <div>${data.fee}</div>
+      <div>${liquidity ? formatEther(liquidity) : 0}</div>
     </div>
   );
 };
