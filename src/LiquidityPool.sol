@@ -5,8 +5,9 @@ pragma solidity ^0.8.18;
 import {LiquidityToken} from "./LiquidityToken.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
-contract LiquidityPool is LiquidityToken, ReentrancyGuard {
+contract LiquidityPool is LiquidityToken, ReentrancyGuard, ERC165 {
     ////////////////////////////////////////
     ///////////// errors ///////////////////
     ////////////////////////////////////////
@@ -125,6 +126,10 @@ contract LiquidityPool is LiquidityToken, ReentrancyGuard {
 
         I_TOKEN0.transfer(msg.sender, yourOwnedShare * (sTokenToReserve[address(I_TOKEN0)]));
         I_TOKEN1.transfer(msg.sender, yourOwnedShare * (sTokenToReserve[address(I_TOKEN1)]));
+    }
+
+    function supportsInterface(bytes4 interfaceId) public pure override returns (bool) {
+        return false;
     }
 
     ///////////////////////////////////////

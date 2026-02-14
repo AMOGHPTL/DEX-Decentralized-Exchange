@@ -1,5 +1,9 @@
+import { useState } from "react";
 import LiquidityPool from "../abi/LiquidityPool.json";
-import { useReadContract } from "wagmi";
+import { usePublicClient, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { erc20Abi } from "viem";
+import { useAccount } from "wagmi";
+
 
 export function useGetPoolLiquidity(poolAddress, watch = true) {
   const result = useReadContract({
@@ -39,3 +43,72 @@ export function useGetTokenReserve(poolAddress, tokenAddress, watch = true) {
     refetch: result.refetch,
     }
 }
+
+export function useAddLiquidity(
+  poolAddress,
+  token0Address,
+  token1Address
+) {
+  const [hash, setHash] = useState(null);
+
+  const { address: user } = useAccount();
+  const publicClient = usePublicClient();
+  const { writeContractAsync } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess } =
+    useWaitForTransactionReceipt({ hash });
+
+  const addLiquidity = async (amount0, amount1) => {
+    if (!user || !token0Address || !token1Address) return;
+
+    // ✅ Read allowance properly
+    const allowance0 = await publicClient.readContract({
+      address: token0Address,
+      abi: erc20Abi,
+      functionName: "allowance",
+      args: [user, poolAddress],
+    });
+
+    if (allowance0 < amount0) {
+      await writeContractAsync({
+        address: token0Address,
+        abi: erc20Abi,
+        functionName: "approve",
+        args: [poolAddress, amount0],
+      });
+    }
+
+    const allowance1 = await publicClient.readContract({
+      address: token1Address,
+      abi: erc20Abi,
+      functionName: "allowance",
+      args: [user, poolAddress],
+    });
+
+    if (allowance1 < amount1) {
+      await writeContractAsync({
+        address: token1Address,
+        abi: erc20Abi,
+        functionName: "approve",
+        args: [poolAddress, amount1],
+      });
+    }
+
+    const txHash = await writeContractAsync({
+      address: poolAddress,
+      abi: LiquidityPool,
+      functionName: "addLiquidity",
+      args: [amount0, amount1],
+    });
+
+    setHash(txHash);
+  };
+
+  return {
+    addLiquidity,
+    isConfirming,
+    isSuccess,
+  };
+}
+
+

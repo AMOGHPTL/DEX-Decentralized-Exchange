@@ -8,6 +8,7 @@ import { Routes, Route } from "react-router-dom";
 import ExplorePoolsPage from "./pages/ExplorePoolsPage";
 import SwapPage from "./pages/SwapPage";
 import PoolPage from "./pages/PoolPage";
+import LiquidityPage from "./pages/LiquidityPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/ExplorePools" element={<ExplorePoolsPage />} />
           <Route path="/Swap/:address" element={<SwapPage />} />
           <Route path="/Pool/:address" element={<PoolPage />} />
+          <Route path="/Liquidity/:address" element={<LiquidityPage />} />
         </Routes>
       </main>
     </div>

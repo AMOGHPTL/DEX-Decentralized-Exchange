@@ -23,8 +23,6 @@ const PoolPage = () => {
   const { liquidity, isLoadingLiquidity, error, refetch } =
     useGetPoolLiquidity(address);
 
-  !isLoadingLiquidity && console.log("liquidity", liquidity);
-
   const { data, isLoading, isError } = useGetPoolInfoWithPoolAddress(
     factoryAddress,
     address,
@@ -95,7 +93,7 @@ const PoolPage = () => {
           <Btn
             img={plus}
             text="add liquidity"
-            to="Swap"
+            to="Liquidity"
             poolAddress={address}
           />
         </div>

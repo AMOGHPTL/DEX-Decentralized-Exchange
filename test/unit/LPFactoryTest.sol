@@ -22,10 +22,14 @@ contract LPFactoryTest is Test {
     address USER = makeAddr("user");
     uint256 STARTING_ERC20_BALANCE = 100 ether;
     uint256 public FEE = 1 ether;
+    ERC20Mock public mock1;
+    ERC20Mock public mock2;
+    ERC20Mock public mock3;
+    ERC20Mock public mock4;
 
     function setUp() public {
         deployer = new DeployLPFactory();
-        (poolFactory, config) = deployer.run();
+        (poolFactory, config, mock1, mock2, mock3, mock4) = deployer.run();
         (cardano, matic, solana, usdc) = config.activeNetworkConfig();
         ERC20Mock(cardano).mint(USER, STARTING_ERC20_BALANCE);
         ERC20Mock(matic).mint(USER, STARTING_ERC20_BALANCE);
@@ -43,10 +47,10 @@ contract LPFactoryTest is Test {
         vm.stopBroadcast();
 
         address[] memory allPools = poolFactory.getAllPools();
-        LiquidityPoolFactory.PoolStruct memory poolInfo = poolFactory.getPoolWithAddress(allPools[0]);
+        (, address token0,,) = poolFactory.getPoolWithAddress(allPools[0]);
 
         assertEq(allPools.length, 1);
-        assertEq(poolInfo.token0, cardano);
+        assertEq(token0, cardano);
     }
 
     ////////////////////////////////////////
